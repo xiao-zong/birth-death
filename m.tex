@@ -1,0 +1,535 @@
+%version of 11 Nov 2019
+\documentclass[12pt]{article}
+%\usepackage{psfig, amssymb}
+\usepackage{amsfonts,amsmath,latexsym,amssymb,mathrsfs}
+%%%%for breaking citation so that they don't overrun
+\usepackage{breakcites}
+%%%%
+%\usepackage{refcheck}%for checking whether equation numbers and references are used.
+\usepackage[pdftex]{graphicx}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{color}
+
+\usepackage{geometry}
+\usepackage{enumerate}
+%\graphicspath{ {./images/} }
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{dsfont,bm,bbm,mathrsfs}
+\usepackage{stmaryrd}
+\usepackage{url,color}
+\usepackage{textcase}
+%\usepackage{showlabels}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{intersections}
+
+\allowdisplaybreaks
+
+%Shortcuts for Theorems
+
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{defi}[thm]{Definition}
+\newtheorem{lma}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{exam}[thm]{Example}
+\newtheorem{countexam}[thm]{Counterexample}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{con}[thm]{Conjecture}
+
+
+
+\makeatletter
+%%% Define shorter display equations commands
+\def\be#1{\begin{equation*}#1\end{equation*}}
+\def\ben#1{\begin{equation}#1\end{equation}}
+\def\bes#1{\begin{equation*}\begin{split}#1\end{split}\end{equation*}}
+\def\besn#1{\begin{equation}\begin{split}#1\end{split}\end{equation}}
+\def\bea#1{\begin{align*}#1\end{align*}}
+\def\bean#1{\begin{align}#1\end{align}}
+\def\bg#1{\begin{gather*}#1\end{gather*}}
+\def\bgn#1{\begin{gather}#1\end{gather}}
+\setlength{\multlinegap}{1em}
+\def\bml#1{\begin{multline*}#1\end{multline*}}
+\def\bmln#1{\begin{multline}#1\end{multline}}
+
+\def\note#1{\par\smallskip%
+\noindent%
+\llap{$\boldsymbol\Longrightarrow$}%
+\fbox{\vtop{\hsize=0.98\hsize\parindent=0cm\small\rm #1}}%
+\rlap{$\boldsymbol\Longleftarrow$}%
+\par\smallskip}
+
+
+%%% Define bracket commands
+\def\given{\mskip 0.5mu plus 0.25mu\vert\mskip 0.5mu plus 0.15mu}
+\newcounter{@bracketlevel}
+\def\@bracketfactory#1#2#3#4#5#6{
+\expandafter\def\csname#1\endcsname##1{%
+\addtocounter{@bracketlevel}{1}%
+\global\expandafter\let\csname @middummy\alph{@bracketlevel}\endcsname\given%
+\global\def\given{\mskip#5\csname#4\endcsname\vert\mskip#6}\csname#4l\endcsname#2##1\csname#4r\endcsname#3%
+\global\expandafter\let\expandafter\given\csname @middummy\alph{@bracketlevel}\endcsname
+\addtocounter{@bracketlevel}{-1}}%
+}
+\def\bracketfactory#1#2#3{%
+\@bracketfactory{#1}{#2}{#3}{relax}{0.5mu plus 0.25mu}{0.5mu plus 0.15mu}
+\@bracketfactory{b#1}{#2}{#3}{big}{1mu plus 0.25mu minus 0.25mu}{0.6mu plus 0.15mu minus 0.15mu}
+\@bracketfactory{bb#1}{#2}{#3}{Big}{2.4mu plus 0.8mu minus 0.8mu}{1.8mu plus 0.6mu minus 0.6mu}
+\@bracketfactory{bbb#1}{#2}{#3}{bigg}{3.2mu plus 1mu minus 1mu}{2.4mu plus 0.75mu minus 0.75mu}
+\@bracketfactory{bbbb#1}{#2}{#3}{Bigg}{4mu plus 1mu minus 1mu}{3mu plus 0.75mu minus 0.75mu}
+}
+\bracketfactory{clc}{\lbrace}{\rbrace}
+\bracketfactory{clr}{(}{)}
+\bracketfactory{cls}{[}{]}
+\bracketfactory{abs}{\lvert}{\rvert}
+\bracketfactory{norm}{\Vert}{\Vert}
+\bracketfactory{floor}{\lfloor}{\rfloor}
+\bracketfactory{ceil}{\lceil}{\rceil}
+\bracketfactory{angle}{\langle}{\rangle}
+
+%%%Define scr commands
+\def\scrF{\mathscr{F}}
+\def\scrG{\mathscr{G}}
+
+%%% Define corresponding vertical bar commands
+
+\def\calF{\mathcal{F}}
+\def\calG{\mathcal{G}}
+\def\ahalf{{\textstyle\frac12}}
+\def\eq#1{\eqref{#1}}
+\def\I{\mathrm{I}}
+\def\Bi{\mathrm{Bi}}
+\def\IP{\prob}
+
+\def\ER{Erd\H{o}s-R\'enyi}
+\def\hKin{\hat{K}^{\mathrm{in}}}
+\def\hKout{\hat{K}^{\mathrm{out}}}
+\def\Kin{K^{\mathrm{in}}}
+\def\Kout{K^{\mathrm{out}}}
+
+\makeatother
+
+
+%Shortcuts for sets of numbers
+\newcommand{\law}{\mathscr{L}}
+\newcommand{\HH}{\mathscr{H}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Pro}{\mathbb{P}} 
+\newcommand{\prob}{\Pro}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\newcommand{\IE}{\E}
+\newcommand{\mean}{\E}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\non}{\nonumber}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\LL}{\textbf{L}}
+\DeclareMathOperator{\Var}{\mathrm{Var}}
+\DeclareMathOperator{\var}{\mathrm{Var}}
+\DeclareMathOperator{\cov}{\mathrm{Cov}}
+\DeclareMathOperator{\bigo}{\mathrm{O}}
+\newcommand{\K}{\textbf{Ker}}
+\newcommand{\Id}{\textbf{Id}}
+
+%%%%%%%%%%%%%
+%%%%%Xia's commands
+%%%%%%%%%%%%%
+\usepackage{subfig}
+
+\newcommand{\bn}{{\bf N}}
+\newcommand{\bone}{{\bf 1}}
+\newcommand{\bc}{{\mathds{C}}}
+\newcommand{\bp}{{\bf P}}
+\newcommand{\bh}{{\textbf H}}
+\newcommand{\bi}{{\bf i}}
+\newcommand{\bk}{{\bf k}}
+\newcommand{\br}{{\bf R}}
+\newcommand{\bq}{{\bf Q}}
+\newcommand{\bs}{{\bf S}}
+\newcommand{\bz}{{\bf Z}}
+\newcommand{\bG}{\mbox{\boldmath$\Gamma$}}
+\newcommand{\ba}{{\bm\alpha}}
+\newcommand{\bl}{{\bm\lambda}}
+\newcommand{\bmu}{{\bm\mu}}
+\newcommand{\bx}{{\bm x}}
+\newcommand{\bX}{{\bm X}}
+\newcommand{\bY}{{\bm Y}}
+\newcommand{\bZ}{{\bm Z}}
+\newcommand{\cF}{{\cal F}}
+\newcommand{\ca}{{\cal A}}
+\newcommand{\cb}{{\cal B}}
+\newcommand{\scrB}{{\mathscr B}}
+\newcommand{\cc}{{\cal C}}
+\newcommand{\cd}{{\cal D}}
+\newcommand{\cf}{{\cal F}}
+\newcommand{\cg}{{\cal G}}
+\newcommand{\ch}{{\cal H}}
+\newcommand{\ci}{{\cal I}}
+\newcommand{\cl}{{\cal L}}
+\newcommand{\cm}{{\cal M}}
+\newcommand{\cn}{{\cal N}}
+\newcommand{\cs}{{\cal S}}
+\newcommand{\cu}{{\cal U}}
+\newcommand{\cy}{{\cal Y}}
+\newcommand{\dtv}{{d_{\rm TV}}}
+\newcommand{\dk}{{d_{\rm K}}}
+\newcommand{\dw}{{d_{\rm W}}}
+\def\tg{{\tilde g}}
+\def\tf{{\tilde f}}
+\newcommand{\Pn}{{\rm Pn}}
+\def\t#1{^{(#1)}}
+
+\DeclareMathOperator*{\esssup}{ess\,sup}
+\DeclareMathOperator*{\essinf}{ess\,inf}
+\newcommand{\Po}{{\rm Pn}}
+
+\def\Ref#1{(\ref{#1})}
+\def\a{\alpha}
+\def\b{\beta}
+\def\s{\sigma}
+\def\f{\phi}
+\def\w{\omega}
+\def\l{\lambda}
+\def\La{\Lambda}
+\newcommand{\oF}{{\overline{F}}}
+\def\p{\pi}
+\def\tod{\buildrel{{\rm d}{\to}}}
+\def\eqd{\stackrel{\rm d}{=}}
+\def\siim{\sum_{i=1}^m}
+\def\sjn{\sum_{j=1}^n}
+\def\dw{d_{\mathrm{W}}}
+\def\dtv{d_{\mathrm{TV}}}
+\def\tpj{\overline{\tau^+_j}}
+\def\tmj{\overline{\tau^-_j}}
+\def\tpi{\overline{\tau^+_i}}
+\def\tpi1{\overline{\tau^+_{i-1}}}
+\def\tmi{\overline{\tau^-_i}}
+\def\stg{\stackrel{\mbox{\scriptsize st}}{\ge }}
+\def\stl{\stackrel{\mbox{\scriptsize st}}{\le }}
+
+\newcommand*\rot[1]{\rotatebox{90}{#1}}
+
+\makeatletter
+
+% \newcommand{\qed}{\box}
+\newcommand{\qed}{\nopagebreak\hspace*{\fill}
+{\vrule width6pt height6ptdepth0pt}\par}
+
+
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\yellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\cyan}[1]{\textcolor{cyan}{#1}}
+\newcommand{\magenta}[1]{\textcolor{magenta}{#1}}
+
+\def\ignore#1{}
+
+\def\Comment#1{
+    \marginpar{$\bullet$\quad{\tiny #1}}}
+
+%%%%%definition of counters
+
+\makeatletter
+\newcommand*\labelcounter[2]{\begingroup
+  \protected@edef\@currentlabel{\csname p@#1\endcsname\csname the#1\endcsname}%
+  \label{#2}\endgroup}
+\newcommand*\refsetcounter[2]{\setcounter{#1}{#2}%
+  \protected@edef\@currentlabel{\csname p@#1\endcsname\csname the#1\endcsname}%
+  }
+\makeatother
+
+\newcounter{rtaskno}
+\DeclareRobustCommand{\rtask}[1]{%
+   \refstepcounter{rtaskno}%
+   \thertaskno\label{#1}}
+
+\ignore{\newcounter{con}
+\DeclareRobustCommand{\const}[1]{%
+   \refstepcounter{con}%
+   \thertaskno\label{#1}}}
+
+\newcounter{con}%for constants
+\newcommand{\const}{{\stepcounter{con}\rm\thecon}}
+%to use the counter number, type \const and then immediately use \qcon{} so that the counter will be added by 1.
+%Use \labelcounter{con}{eq:123} to extract the numeric number of the counter at this point
+
+%%%%%end of definition of counters
+
+%%%%%%%%%%%%%%
+%end of Xia's commands
+%%%%%%%%%%%%%%
+
+\numberwithin{equation}{section}
+
+\title{\sc\bf\large\MakeUppercase{A revisit of large deviation of Poisson binomial}}
+
+\author{ Qingwei Liu\footnote{}
+\ and \
+ Aihua Xia\footnote{School of Mathematics and Statistics,
+The University of Melbourne,
+VIC 3010, Australia, E-mail: aihuaxia@unimelb.edu.au. Work supported in part by Australian Research Council Grants No DP220102666.}
+}
+
+\def\parsedate #1:20#2#3#4#5#6#7#8\empty{20#2#3-#4#5-#6#7}
+\def\moddate{\expandafter\parsedate\pdffilemoddate{\jobname.tex}\empty}
+\date{\moddate}
+
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract} TBA\end{abstract}
+
+
+\vskip12pt \noindent\textit {Key words and phrases\/}: Stein-Chen method, Poisson approximation,
+moderate deviation.
+
+\vskip12pt \noindent\textit{AMS 2020 Subject Classification\/}:
+
+
+
+\section{The properties of the solution}%\label{secIntroduction}
+
+Let $Y$ be a rv having the distribution determined by $\alpha$ and $\beta$, write $\beta_j=\beta j+j(j-1)$, $F(j)=\IP(Y\le j)$, $\oF(j)=\IP(Y\ge j)$, for $j\in \Z_+$. Define 
+\begin{equation}\scrB g(i)=\alpha g(i+1)-\beta_ig(i),\label{steinid}\end{equation}
+and set the Stein equation as
+\begin{equation}
+\scrB g(i)=\bone_{[k,\infty)}(i)-\E\bone_{[k,\infty)}(Y)=\bone_{[k,\infty)}(i)-\overline{F}(k)\label{steineq},
+\end{equation}
+write the solution to \Ref{steineq} as $g_k$. 
+Noting that $g(0)$ plays no role in \Ref{steineq}, we set $g(0)=g(1)$. 
+
+\begin{lma}\label{lma1}
+
+{\begin{description}
+\item{(i)} $\Delta g_k(i)<0$ for $i\le k-1$ and $\Delta g_k(i)>0$ for $i\ge k$.
+\item{(ii)} $\Delta^2 g_k(i)<0$ for $1\le i\le k-2$ and $i\ge k$, and $\Delta^2 g_k(k-1)>0$.
+\item{(iii)} For $k\ge 2$, $\Delta^2 g_k(k-1)< \frac{1-\pi_0}{\alpha}\wedge \frac1{\beta_{k-1}}\wedge \frac1{\beta+1}.$
+\item{(iv)} $\Delta^3 g_k(i)<0$ for $1\le i\le k-3$ and $i= k-1$, and $\Delta^3 g_k(i)>0$ for $i= k-2$ and $i\ge k$.
+\end{description}}
+\end{lma}
+
+\noindent{\bf Proof of Lemma~\ref{lma1}} For convenience, we drop the subindex $k$ from $g_k$, and use the representation of \cite{BX01} to argue as ... to get
+ \ben{\label{sol1}\Delta g(i)=\begin{cases}
+\frac{\oF(k)}{\pi_i}\left(\frac{F(i-1)}{\beta_i}-\frac{F(i)}{\alpha}\right),& \mbox{ for }i\le k-1,\\
+\frac{F(k-1)}{\pi_i}\left(\frac{\oF(i)}{\beta_i}-\frac{\oF(i+1)}{\alpha}\right),& \mbox{ for }i\ge k.
+\end{cases}}
+
+(i) For $i\le k-1$, since $\alpha F(i-1)=\sum_{j=1}^i\beta_j\pi_j\le \beta_i\sum_{j=1}^i\pi_j<\beta_iF(i)$, we have $\Delta g(i)<0$. Similarly, for $i\ge k$, we have $\alpha\oF(i)=\sum_{j=i+1}^\infty\beta_j\pi_j>\beta_i\oF(i+1)$, we obtain $\Delta g(i)>0$. 
+
+(ii) For $1\le i\le k-2$,
+ \begin{align*}\Delta^2 g(i)&=-\oF(k)\left(\frac{F(i+1)}{\alpha\pi_{i+1}}-2\frac{F(i)}{\alpha\pi_i}+\frac{F(i-1)}{\alpha\pi_{i-1}}\right)\nonumber\\
+ &=-\frac{\oF(k)}{\alpha^3\pi_{i-1}}\left(\beta_{i+1}\beta_iF(i+1)-2\alpha\beta_iF(i)+\alpha^2F(i-1)\right)\nonumber\\
+ &=-\frac{\oF(k)}{\alpha^3\pi_{i-1}}\sum_{j=0}^{i+1}\pi_j\left(\beta_{i+1}\beta_i-2\beta_i\beta_j+\beta_j\beta_{j-1}\right)\nonumber\\
+ &=-\frac{\oF(k)}{\alpha^3\pi_{i-1}}\sum_{j=0}^i\pi_j\left\{(\beta_i-\beta_j)(\beta_i-\beta_j+2i+\beta)+2\beta_j(i+1-j)\right\}\nonumber\\
+ &<0.
+\end{align*}
+For $i\ge k$,
+ \begin{align*}\Delta^2 g(i)&=-F(k-1)\left(\frac{\oF(i+2)}{\alpha\pi_{i+1}}-2\frac{\oF(i+1)}{\alpha\pi_i}+\frac{\oF(i)}{\alpha\pi_{i-1}}\right)\nonumber\\
+ &=-\frac{F(k-1)}{\alpha^3\pi_{i-1}}\left(\beta_i\beta_{i+1}\oF(i+2)-2\alpha\beta_i\oF(i+1)+\alpha^2\oF(i)\right)\nonumber\\
+ &=-\frac{F(k-1)}{\alpha^3\pi_{i-1}}\sum_{j=i+2}^\infty\pi_j\left(\beta_i\beta_{i+1}-2\beta_i\beta_j+\beta_j\beta_{j-1}\right)\nonumber\\
+ &=-\frac{F(k-1)}{\alpha^3\pi_{i-1}}\sum_{j=i+2}^\infty\pi_j\left\{(\beta_{j-1}-\beta_{i+1})(\beta_j-\beta_i)\right.\nonumber\\
+ &\ \ \ \ \ \  \left.+(\beta+j-1)(j\beta+2ij)-(\beta+i-1)\left[i\beta+2i(j-1)\right]\right\}\nonumber\\
+ &<0.
+\end{align*}
+For $i=k-1$, we have from (i) that
+ \begin{align*}\Delta^2 g(k-1)&=\Delta g(k)-\Delta g(k-1)>0.
+\end{align*}
+
+(iii) Noting that $\beta_0=0$ and 
+\begin{equation}\beta_s-\beta_r=(s-r)(\beta+s+r-1)\mbox{ for }s,r\in\Z_+,\label{lma1proofiii-01}
+\end{equation} we obtain
+\begin{equation}2\beta_i\beta_{k-1}-\beta_{k-1}\beta_k-\beta_{i-1}\beta_i=(k-i)(-2\beta_i+(\beta+k+i-1)(\beta_i-\beta_{k-1}))<0,
+\label{lma1proofiii-02}
+\end{equation}
+for $1\le i\le k-1$.  We can factorise $\Delta^2 g(k-1)$ in terms of $\oF(k)$ to get
+\begin{align*}
+\Delta^2 g(k-1)&=\frac{F(k-1)}{\pi_k}\left(\frac{\oF(k)}{\beta_k}-\frac{\oF(k+1)}{\alpha}\right)
++\frac{\oF(k)}{\pi_{k-1}}\left(\frac{F(k-1)}{\alpha}-\frac{F(k-2)}{\beta_{k-1}}\right)\nonumber\\
+&=\frac{F(k-1)}{\alpha}+\frac{\oF(k)}{\alpha^3\pi_{k-2}}\sum_{i=1}^{k-1}(2\beta_i\beta_{k-1}-\beta_{k-1}\beta_k-\beta_{i-1}\beta_i)\pi_i\nonumber\\
+&\ \ \ +\frac{\oF(k)}{\alpha^3\pi_{k-2}}\left(-\pi_0+\pi_k\right)\beta_{k-1}\beta_k\\
+&<\frac{F(k-1)}{\alpha}+\frac{\oF(k)}{\alpha^3\pi_{k-2}}\left(-\pi_0+\pi_k\right)\beta_{k-1}\beta_k\\
+&=\frac1\alpha-\frac{\pi_0\oF(k)}{\alpha\pi_k}
+<\frac{1-\pi_0}\alpha.\end{align*}
+
+To obtain the bound $\Delta^2 g(k-1)<\frac1{\beta_{k-1}}$, we further expand
+ \Ref{lma1proofiii-02} to get
+$$2\beta_{k-1}\beta_i-\beta_{k-1}\beta_k-\beta_{i-1}\beta_i
+=(k-i)[(i-k+1)(\beta+i+k-3)(\beta+i+k-2)-2(k-1)(\beta+k-2)]<0,$$
+for $i\ge k+1$. 
+We now factorise $\Delta^2 g(k-1)$ in terms of $F(k-1)$ to get
+ \begin{align*}
+\Delta^2 g(k-1)&=\frac{F(k-1)}{\alpha^3\pi_{k-2}}\sum_{i=k+1}^\infty(2\beta_{k-1}\beta_i-\beta_{k-1}\beta_k-\beta_{i-1}\beta_i)\pi_i+\frac{F(k-1)}{\beta_{k-1}}+\frac{\oF(k)}{\beta_{k-1}}\\
+&<\frac{1}{\beta_{k-1}}.
+\end{align*}
+
+The claim of $\Delta^2 g(k-1)<\frac1{\beta+1}$ follows from $\Delta^2 g(k-1)<\frac{1-\pi_0}\alpha\wedge\frac1{\beta_{k-1}}$ for $k\ge 3$ or $\alpha\ge \beta+1$, hence it suffices to show that $\Delta^2 g_2(1)<\frac1{\beta+1}$ for $\alpha< \beta+1$. If $\alpha<\beta+1$, direct verification ensures that $\alpha(\alpha-2)-2\beta(\beta+1)<0$, hence
+\begin{align*}
+\Delta^2 g_2(1)&=\frac{F(1)}{\pi_2}\left(\frac{\oF(2)}{\beta_2}-\frac{\oF(3)}{\alpha}\right)
++\frac{\oF(2)}{\pi_{1}}\left(\frac{F(1)}{\alpha}-\frac{F(0)}{\beta_{1}}\right)\nonumber\\
+&=\alpha^{-3}\{\alpha(\alpha+2\beta)\oF(2)-(\alpha+\beta)\beta_2\oF(3)\}\nonumber\\
+&=\frac{\pi_0}{\beta_1\beta_2}(\alpha+2\beta)+\frac{(\alpha(\alpha-2)-2\beta(\beta+1))\oF(3)}{\alpha^3}\\
+&<\frac{\pi_0(\alpha+2\beta)}{\beta_1\beta_2}\textcolor{red}{=\frac{\pi_0}{\beta+1}+\frac{\pi_1}{2(\beta+1)}}<\frac1{\beta+1}.\end{align*}
+
+(iv) For $1\le i\le k-3$,
+ \begin{align}\Delta^3 g(i)&=-\oF(k)\left(\frac{F(i+2)}{\alpha\pi_{i+2}}-3\frac{F(i+1)}{\alpha\pi_{i+1}}+3\frac{F(i)}{\alpha\pi_i}-\frac{F(i-1)}{\alpha\pi_{i-1}}\right)\nonumber\\
+ &=-\frac{\oF(k)}{\alpha^4\pi_{i-1}}\left(\beta_{i+2}\beta_{i+1}\beta_iF(i+1)-3\alpha\beta_{i+1}\beta_iF(i)+3\alpha^2\beta_iF(i-1)-\alpha^3F(i-2)\right)\nonumber\\
+ &=-\frac{\oF(k)}{\alpha^4\pi_{i-1}}\sum_{j=0}^{i+1}\pi_j\left(\beta_{i+2}\beta_{i+1}\beta_i-3\beta_i\beta_j(\beta_{i+1}-\beta_{j-1})-\beta_j\beta_{j-1}\beta_{j-2}\right).\label{lma1proof1.1}
+ \end{align}
+ Using \Ref{lma1proofiii-01},
+ we have
+ \begin{align*}
+ &\beta_{i+2}\beta_{i+1}\beta_i-\beta_j\beta_{j-1}\beta_{j-2}\nonumber\\
+ &=(\beta_{i+2}-\beta_j)\beta_{i+1}\beta_i+\beta_j(\beta_{i+1}-\beta_{j-1})\beta_i+\beta_j\beta_{j-1}(\beta_i-\beta_{j-2})\nonumber\\
+ &=(i+2-j)(\beta+i+j-1)(\beta_{i+1}\beta_i+\beta_j\beta_i+\beta_j\beta_{j-1})+2(i+2-j)(\beta_{i+1}\beta_i-\beta_j\beta_{j-1}),
+ \end{align*}
+ and
+ $$\beta_{i+1}-\beta_{j-1}=(i+2-j)(\beta+i+j-1),%\label{lma1proof1.3}
+$$
+ hence we can rewrite \Ref{lma1proof1.1} as 
+ \begin{align*}
+ \Delta^3 g(i)&=-\frac{\oF(k)}{\alpha^4\pi_{i-1}}\sum_{j=0}^{i+1}\pi_j(i+2-j)\left\{(\beta+i+j-1)(i+1-j)[(\beta+i+j)(\beta_i-\beta_j)+2\beta_j]\right.\nonumber\\
+ &\ \ \ \ \ \ \left.+2(\beta_{i+1}\beta_i-\beta_j\beta_{j-1})\right\}\nonumber\\
+ &<0.
+\end{align*}
+
+For $i\ge k$, we can argue as for $1\le i\le k-3$ to get
+\begin{align}\Delta^3 g(i)&=\frac{F(k-1)}{\alpha^4\pi_{i-1}}\left\{\alpha^3\oF(i)-3\alpha^2\beta_i\oF(i+1)+3\alpha\beta_i\beta_{i+1}\oF(i+2)-\beta_{i+2}\beta_{i+1}\beta_i\oF(i+3)\right\}\nonumber\\
+ &=\frac{F(k-1)}{\alpha^4\pi_{i-1}}\sum_{j=i+3}^\infty\pi_jd_{ij},\label{lma1proof1.4}
+ \end{align}
+where 
+$$d_{ij}:=\beta_j\beta_{j-1}\beta_{j-2}-3\beta_i\beta_j(\beta_{j-1}-\beta_{i+1})-\beta_{i+2}\beta_{i+1}\beta_i.$$
+We apply \Ref{lma1proofiii-01} again to get 
+ \begin{align*}
+ &\beta_j\beta_{j-1}\beta_{j-2}-\beta_{i+2}\beta_{i+1}\beta_i\nonumber\\
+ &=(\beta_j-\beta_{i+2})\beta_{j-1}\beta_{j-2}+\beta_{i+2}(\beta_{j-1}-\beta_{i+1})\beta_{j-2}+\beta_{i+2}\beta_{i+1}(\beta_{j-2}-\beta_i)\nonumber\\
+ &=(j-i-2)(\beta+i+j-1)(\beta_{j-1}\beta_{j-2}+\beta_{i+2}\beta_{j-2}+\beta_{i+2}\beta_{i+1})+2(j-i-2)(\beta_{j-1}\beta_{j-2}-\beta_{i+2}\beta_{i+1}),
+ \end{align*}
+ and
+ \[\beta_{j-1}-\beta_{i+1}=(j-i-2)(\beta+i+j-1),
+\]
+therefore,
+\begin{align*}
+d_{ij}&=2(j-i-2)(\beta_{j-1}\beta_{j-2}-\beta_{i+2}\beta_{i+1})\\
+&\ \ \ +(j-i-2)(\beta+i+j-1)\{\beta^2(j-i)(j-i-1)\\
+&\ \ \ \ \ +\beta\left[\left((j-3)^2-i^2\right)\left(2(j-3-i)+1\right)+8(j-3)(j-3-i)+11(j-3)+i+6\right]\\
+&\ \ \ \ \ +\left((j-3)^2-i^2\right)^2+4(j-3)((j-3)^2-i^2)+7(j-3)^2+4(j-3)\\
+&\ \ \ \ \ +\left.i(j-3-i)\left(18+6(j-3)-4i\right)+5i^2+20i\right\}\\
+&>0,\end{align*}
+and \Ref{lma1proof1.4} ensures $\Delta^3 g(i)>0$.
+
+ The remaining claims are straightforward consequences of (ii), namely, $\Delta^3 g(k-1)<0$ and $\Delta^3 g(k-2)>0$. \qed
+ 
+ \section{On the large deviation of Poisson binomial}%\label{secIntroduction}
+ 
+ Let $X_i,\ 1\le i\le n$, be independent Bernoulli random variables with $\prob(X_i=1)=1-\prob(X_i=0)=p_i\in(0,1)$, define $\lambda_j=\sum_{i=1}^np_i^j$, and write $\lambda:=\lambda_1$, $W=\sum_{i=1}^nX_i$, $W^i=W-X_i$ and $W^{ij}=W^i-X_j$ for $j\ne i$. We assume the following two conditions:
+ 
+ \begin{description}
+ \item{(Cn1)} $\lambda^2\lambda_3-2\lambda\lambda_2^2+3\lambda_2^3-2\lambda_2^2\lambda_3+\lambda_2\lambda_3-5\lambda_2\lambda_4+2\lambda_2\lambda_5+2\lambda_3^2\le 0.$
+  \item{(Cn2)} $\lambda^2\lambda_3-2\lambda\lambda_2\lambda_3-\lambda_2^3+2\lambda_2^2\lambda_3-\lambda_2\lambda_3+\lambda_2\lambda_4-2\lambda_2\lambda_5+2\lambda_3^2\ge 0.$
+ \end{description}
+ 
+ When $p_i=p$, $1\le i\le n$, (Cn1) and (Cn2) are the same and they are equivalent to $p\le 1/2$. For the number of records, (Cn2) holds but (Cn1) does not hold, \textcolor{red}{ can we find another example such that (Cn1) holds but (Cn2) does not hold? }
+ 
+ \begin{lma}\label{lma2} Assume that (Cn1) and (Cn2) hold, and $\max_{1\le i\le n}p_i\le0.5$, we have
+ \begin{equation}\frac{\prob(W\ge k)}{\pi_{[k,\infty)}}\le 9\label{lma2-1}\end{equation}
+ for all $k\in \Z_+$, where $\pi_{[k,\infty)}:=\sum_{i=k}^\infty \pi_i$.
+ \end{lma}
+
+\noindent{\bf Proof}
+ Let $\scrB g(i):=\alpha g(i+1)-\beta_i g(i)$, and $g_k$ be the solution to the Stein equation
+ \begin{equation}
+ \scrB g_k(i)=\bone_{[k,\infty)}-\pi_{[k,\infty)}.\label{steineq}
+ \end{equation}
+ We drop the subindex $k$ from $g_k$ if there is no confusion. Then, with $\alpha=\beta\lambda+\lambda^2-\lambda_2$,
+ $\beta=\lambda^2/\lambda_2-1-2\lambda+2\lambda_3/\lambda_2$, from \cite[Page~1389]{BX01} we have that
+ \begin{align}
+ \mean \scrB g(W)&=\sum_{i=1}^np_i^2\beta\mean \Delta g(W^i+1)+\sum_{j\ne i}p_i^2p_j^2\mean\Delta^2g(W^{ij}+1)\nonumber\\
+ &\ \ \ -\sum_{j\ne i}p_ip_j(1-p_i-p_j)\mean\Delta g(W^{ij}+1). \label{prooflemma1-1}
+ \end{align}
+ Define $e_1=\beta\sum_{i=1}^np_i^2$, then it is a routine exercise to verify that $e_1=\sum_{j\ne i} p_ip_j(1-p_i-p_j)$. We can construct random indices $(I^+,I^-,J^-)$ such that 1) $\prob(I^+=i)=p_i^2/\lambda_2$, $\prob((I^-,J^-)=(i,j))=p_ip_j(1-p_i-p_j)/e_1$, $1\le i\ne j\le n$; 2) $(I^+,I^-,J^-)$ is independent of $\{X_i\}$. By the randomisation of the indices, we can rewrite \Ref{prooflemma1-1} as
+ \begin{align}
+ \mean \scrB g(W)&=e_1\mean \Delta g(W^{I^+}+1)+\sum_{j\ne i}p_i^2p_j^2\mean\Delta^2g(W^{ij}+1)\nonumber\\
+ &\ \ \ -e_1\mean\Delta g(W^{I^-J^-}+1). \label{prooflemma1-2}
+ \end{align} 
+ Now, (Cn1) is equivalent to $\prob(X_{I^-}+X_{J^-}=0)\le \prob(X_{I^+}=0)$, hence $X_{I^-}+X_{J^-}\stg X_{I^+}$, where $\stg$ stands for `stochastically larger than or equal to'. On the other hand, (Cn2) is equivalent to $\prob(X_{I^-}+X_{J^-}=2)\le \prob(X_{I^+}=1)$. Hence (Cn1) and (Cn2) allow us to construct $(I^+,I^-,J^-)$ together such that  $\{X_{I^-}+X_{J^-}=0\}\subset\{X_{I^+}=0\}$ and $\{X_{I^-}+X_{J^-}=2\}\subset \{X_{I^+}=1\}$. We can rewrite \Ref{prooflemma1-2} as
+ \begin{align}
+ \mean \scrB g(W)&=e_1\mean \Delta^2 g(W^{I^-J^-}+1)\left(\bone_{[X_{I^-}+X_{J^-}=1,X_{I^+}=0]}+\bone_{[X_{I^-}+X_{J^-}=2]}\right)
+\nonumber \\
+ & \ \ \ +\sum_{j\ne i}p_i^2p_j^2\mean\Delta^2g(W^{ij}+1)\nonumber\\
+ &\le e_1\Delta^2 g_k(k-1)\textcolor{red}{\E}\left[\bone_{[W^{I^-J^-}=k-2]}\left(\bone_{[X_{I^-}+X_{J^-}=1,X_{I^+}=0]}+\bone_{[X_{I^-}+X_{J^-}=2]}\right)\right]
+ \nonumber\\ & \ \ \ +\Delta^2 g_k(k-1)\sum_{j\ne i}\prob(W^{ij}=k-2)p_i^2p_j^2\nonumber\\
+ &\le e_1\Delta^2 g_k(k-1)\textcolor{red}{\E}\left[\bone_{[W^{I^-J^-}=k-2]}\left(\bone_{[X_{I^-}+X_{J^-}=1]}+\bone_{[X_{I^-}+X_{J^-}=2]}\right)\right]
+ \nonumber\\ & \ \ \ +\Delta^2 g_k(k-1)\sum_{j\ne i}\prob(W^{ij}=k-2)p_i^2p_j^2\nonumber\\
+ &=\Delta^2 g_k(k-1)\sum_{j\ne i}\prob(W^{ij}=k-2)p_ip_j[(p_i+p_j)(1-p_i)(1-p_j)].
+ \label{prooflemma1-3}
+ \end{align}
+However,
+$$\sum_{i\ne j}p_ip_j\prob(W^{ij}=k-2)=\mean \left\{W(W-1)\bone_{[W=k]}\right\}=k(k-1)\prob(W=k),$$
+\Ref{prooflemma1-3} implies
+ \begin{align}
+ \mean \scrB g(W)
+ &\le \max_{i_1\ne i_2}[(p_{i_1}+p_{i_2})(1-p_{i_1})(1-p_{i_2})]\Delta^2 g_k(k-1)\sum_{j\ne i}\prob(W^{ij}=k-2)p_ip_j\nonumber\\
+ &\le \frac8{27}\Delta^2 g_k(k-1)k(k-1)\prob(W=k)
+ \label{prooflemma1-4}\\
+ &\le \frac8{27}\Delta^2 g_k(k-1)k(k-1)\prob(W\ge k)
+ \label{prooflemma1-5}
+ \end{align}
+ For $k\ge 3$, we combine \Ref{prooflemma1-5} and Lemma~\ref{lma1} with $\beta_{k-1}$ to get
+ $$\prob(W\ge k)-\pi_{[k,\infty)}\le \frac8{27}k(k-1)\prob(W\ge k)/\beta_{k-1}\le \frac89\prob(W\ge k),$$
+ which implies \Ref{lma2-1} for $k\ge 3$. For $k=2$, we combine \Ref{prooflemma1-5} and Lemma~\ref{lma1} with $1/(\beta+1)$ to get
+  $$\prob(W\ge 2)-\pi_{[2,\infty)}\le \frac{16}{27}\prob(W\ge 2)/(\beta+1)\le \frac{16}{27}\prob(W\ge 2),$$
+  which yields
+  $\prob(W\ge 2)/\pi_{[2,\infty)}<27/11.$ For $k=1$, since $1-x>e^{-2x}$ for $x<0.796$, we have $\prod_{i=1}^n(1-p_i)>e^{-2\lambda}$ provided $\max_{1\le i\le n}p_i<0.796$. On the other hand, $\alpha=\beta\lambda+\lambda^2-\lambda_2>\beta\lambda$, we have $\alpha/\beta>\lambda$ and
+  \begin{align*}
+  \frac{\prob(W\ge 1)}{\pi_{[1,\infty)}}&=\frac{1-\prod_{i=1}^n(1-p_i)}{1-\pi_0}\\
+  &=\left(1-\prod_{i=1}^n(1-p_i)\right)\left(1+\left(\sum_{i=1}^\infty\prod_{1\le j\le i}\frac \alpha{\beta_j}\right)^{-1}\right)\\
+  &\le (1-e^{-2\lambda})(1+(\alpha/\beta)^{-1})\le (1-e^{-2\lambda})(1+\lambda^{-1})\\
+  &<3.
+  \end{align*}
+  \qed
+ 
+ {\bf Problem} We need to get a better estimate of \Ref{prooflemma1-4} to \Ref{prooflemma1-5}.
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% References   %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\ac{{Academic Press}~}
+\def\aap{{Adv. Appl. Prob.}~}
+\def\ap{{Ann. Probab.}~}
+\def\anap{{Ann. Appl. Probab.}~}
+\def\eljp{{\it Electron.\ J.~Probab.\/}~} 
+\def\jap{{J. Appl. Probab.}~}
+\def\jws{{John Wiley~$\&$ Sons}~}
+\def\ny{{New York}~}
+\def\ptrf{{Probab. Theory Related Fields}~}
+\def\sp{{Springer}~}
+\def\spa{{Stochastic Process. Appl.}~}
+\def\sv{{Springer-Verlag}~}
+\def\tpa{{Theory Probab. Appl.}~}
+\def\zw{{Z. Wahrsch. Verw. Gebiete}~}
+
+ \begin{thebibliography}{9}
+
+ \bibitem[Brown \& Xia~(2001)]{BX01}Brown, T. C. \& Xia, A.~(2001). Stein's method and birth-death processes. \emph{\ap}1373--1403.
+ 
+ \end{thebibliography}
+\end{document}
+
+
+
+
+
+
+
+
+
+
